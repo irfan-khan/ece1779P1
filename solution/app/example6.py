@@ -16,6 +16,7 @@ def login():
 @webapp.route('/login_submit',methods=['POST'])
 def login_submit():
     print(request.form['username'])
+    user = request.form['username']
     password = request.form['password']
     print(password)
     #hash password
@@ -24,6 +25,7 @@ def login_submit():
     hash_object = hashlib.sha1(password.encode('utf-8')+salt.encode('utf-8'))
     hex_dig = hash_object.hexdigest()
     print(hex_dig) #hashed password
+    db_add_user(user, hex_dig)
     if 'username' in request.form and \
        request.form['username'] == 'spy' and \
        'password' in request.form and \
@@ -89,7 +91,8 @@ def login_submit_v2():
     return redirect(url_for('login_v2'))
 
 def db_add_user(user, password):
-    cnx = mysql.connector.connect(user='root', password='password',
+    print("add user")
+    cnx = mysql.connector.connect(user='root', password='2401',
                                   host='127.0.0.1',
                                   database='A1')
     cursor = cnx.cursor()
